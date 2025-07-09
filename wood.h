@@ -6,3 +6,4 @@
 void errorLog(const std::string& s, bool shouldCrash);
 void warningLog(const std::string& s);
 void successLog(const std::string& s);
+void infoLog(const std::string& s);

@@ -16,3 +16,9 @@ void successLog(const std::string& s) {
 }
 
 
+void infoLog(const std::string& s) {
+    std::cout << "[" <<"i"<< "] " << s << std::endl;
+}
+
+
+

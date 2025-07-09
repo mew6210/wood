@@ -1,6 +1,6 @@
 #include "wood.h"
 
 int main() {
-	successLog("Library works!");
+	infoLog("Library works!");
 	return 0;
 }
