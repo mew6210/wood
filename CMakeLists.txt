@@ -1,9 +1,11 @@
 ﻿cmake_minimum_required (VERSION 3.8)
 
 project (wood LANGUAGES CXX)
+set (CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_library(wood STATIC wood.cpp "main.cpp")
-target_include_directories(wood PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+add_library(wood INTERFACE)
+target_include_directories(wood INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 
 include(FetchContent)
@@ -17,7 +19,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(termcolor)
 FetchContent_GetProperties(termcolor)
 
-target_include_directories(wood PUBLIC ${termcolor_SOURCE_DIR}/include)
+target_include_directories(wood INTERFACE ${termcolor_SOURCE_DIR}/include)
 
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     add_executable(wood_test main.cpp)

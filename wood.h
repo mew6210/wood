@@ -1,9 +1,37 @@
 ﻿#pragma once
 #include <termcolor/termcolor.hpp> //coloring ui single header library. https://github.com/ikalnytskyi/termcolor
 #include <iostream>
+#include <cstdarg>
+#include <sstream>
 
+template <typename... Args>
+void errorLog(const bool& shouldCrash, Args&&... args) {
 
-void errorLog(const std::string& s, bool shouldCrash);
-void warningLog(const std::string& s);
-void successLog(const std::string& s);
-void infoLog(const std::string& s);
+    std::ostringstream oss;
+    (oss << ... << args);
+
+    std::cout << "[" << termcolor::red << "-" << termcolor::reset << "] " << oss.str() << std::endl;
+    if (shouldCrash) throw std::runtime_error(oss.str());
+
+}
+
+template <typename... Args>
+void warningLog(Args&&... args) {
+    std::ostringstream oss;
+    (oss << ... << args);
+    std::cout << "[" << termcolor::yellow << "?" << termcolor::reset << "] " << oss.str() << std::endl;
+}
+template <typename... Args>
+void successLog(Args&&... args) {
+    std::ostringstream oss;
+    (oss << ... << args);
+    std::cout << "[" << termcolor::green << "+" << termcolor::reset << "] " << oss.str() << std::endl;
+}
+
+template <typename... Args>
+void infoLog(Args&&... args) {
+    std::ostringstream oss;
+    (oss << ... << args);
+    std::cout << "[" << "i" << "] " << oss.str() << std::endl;
+}
+
