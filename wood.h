@@ -1,4 +1,5 @@
 ﻿#pragma once
+#define NOMINMAX
 #include <termcolor/termcolor.hpp> //coloring ui single header library. https://github.com/ikalnytskyi/termcolor
 #include <iostream>
 #include <cstdarg>
