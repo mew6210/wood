@@ -2,6 +2,8 @@
 
 struct Foo{};
 
+using namespace wood;
+
 int main() {
 	
 	errorLog(false,"my","app", "crashed");
@@ -9,5 +11,6 @@ int main() {
 	successLog("Made: ", 20, " submissions!");
 	const char* name = "log";
 	infoLog("very ", "informational ", name);
+	
 	return 0;
 }
