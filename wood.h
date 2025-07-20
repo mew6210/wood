@@ -8,9 +8,7 @@
 
 namespace wood{
 
-    namespace woodInternal{
-        
-    }
+    namespace woodInternal{}
 
     template <typename... Args>
     void errorLog(const bool& shouldCrash, Args&&... args) {
