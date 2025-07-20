@@ -8,40 +8,59 @@
 
 namespace wood{
 
-    namespace woodInternal{}
+    namespace woodInternal{
+        void printErrorSignature() {
+            std::cout << "[" << termcolor::red << "-" << termcolor::reset << "] ";
+        }
+
+        void printWarningSignature(){
+            std::cout << "[" << termcolor::yellow << "?" << termcolor::reset << "] ";
+        }
+        void printSuccessSignature(){
+            std::cout << "[" << termcolor::green << "+" << termcolor::reset << "] ";
+        }
+        void printInfoSignature() {
+            std::cout << "[" << "i" << "] ";
+        }
+
+        
+        template<typename... Args>
+        std::string printArgs(Args&&... args) {
+            std::ostringstream oss;
+            (oss << ... << args);
+            std::cout << oss.str();
+            return oss.str();
+        }
+    
+    
+    }
 
     template <typename... Args>
     void errorLog(const bool& shouldCrash, Args&&... args) {
-
-        std::ostringstream oss;
-        (oss << ... << args);
-
-        std::cout << "[" << termcolor::red << "-" << termcolor::reset << "] " << oss.str() << std::endl;
-        if (shouldCrash) throw std::runtime_error(oss.str());
-
+        woodInternal::printErrorSignature();
+        std::string errorString=woodInternal::printArgs(std::forward<Args>(args)...);
+        std::cout << "\n";
+        if (shouldCrash) throw std::runtime_error(errorString);
     }
 
     template <typename... Args>
     void warningLog(Args&&... args) {
-        std::ostringstream oss;
-        (oss << ... << args);
-        std::cout << "[" << termcolor::yellow << "?" << termcolor::reset << "] " << oss.str() << std::endl;
+        woodInternal::printWarningSignature();
+        woodInternal::printArgs(std::forward<Args>(args)...);
+        std::cout<<"\n";
     }
     template <typename... Args>
     void successLog(Args&&... args) {
-        std::ostringstream oss;
-        (oss << ... << args);
-        std::cout << "[" << termcolor::green << "+" << termcolor::reset << "] " << oss.str() << std::endl;
+        woodInternal::printSuccessSignature();
+        woodInternal::printArgs(std::forward<Args>(args)...);
+        std::cout<< "\n";
     }
 
     template <typename... Args>
     void infoLog(Args&&... args) {
-        std::ostringstream oss;
-        (oss << ... << args);
-        std::cout << "[" << "i" << "] " << oss.str() << std::endl;
+        woodInternal::printInfoSignature();
+        woodInternal::printArgs(std::forward<Args>(args)...);
+        std::cout << "\n";
     }
-
-
-
 
 }
