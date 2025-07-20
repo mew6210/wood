@@ -43,6 +43,9 @@ namespace wood{
         if (shouldCrash) throw std::runtime_error(errorString);
     }
 
+
+
+
     template <typename... Args>
     void warningLog(Args&&... args) {
         woodInternal::printWarningSignature();
