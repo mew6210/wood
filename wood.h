@@ -5,7 +5,7 @@
 #include <cstdarg>
 #include <sstream>
 #include <unordered_map>
-
+#include <chrono>
 
 namespace wood{
 
@@ -62,8 +62,6 @@ namespace wood{
     }
 
 
-
-
     template <typename... Args>
     void errorLog(const bool& shouldCrash, Args&&... args) {
         std::string errorString = woodInternal::Log(woodInternal::LogLevel::Error, std::forward<Args>(args)...);
@@ -108,6 +106,36 @@ namespace wood{
 
         std::unordered_map<int, Channel> channels;
 
+        std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
+        std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now();
+        
+        bool shouldTimestamp = false;
+
+
+        void printTimeTaken() {
+
+            end = std::chrono::high_resolution_clock::now();
+            auto seconds_taken = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
+            
+            int hours = seconds_taken / 3600;
+            int minutes = (seconds_taken % 3600) / 60;
+            int seconds = seconds_taken % 60;
+            
+
+            
+            std::cout<<std::setfill('0') << std::setw(2) << hours << ":"
+            << std::setfill('0') << std::setw(2) << minutes << ":"
+            << std::setfill('0') << std::setw(2) << seconds;
+
+        }
+
+        void printTimestamp() {
+            std::cout << "[";
+            std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now();
+            printTimeTaken();
+            std::cout << "] ";
+        }
+
         bool doesChannelExist(const int& channelId) {
 
             auto channelIt = channels.find(channelId);
@@ -136,6 +164,7 @@ namespace wood{
                 case woodInternal::LogLevel::Error: woodInternal::printErrorSignature();  break;
                 default: std::cout << "internal wrong LogLevel error";
                 }
+                if(shouldTimestamp) printTimestamp();
                 std::cout << channel.getName() << ": ";
                 std::string argsString = woodInternal::printArgs(std::forward<Args>(args)...);
                 std::cout << "\n";
@@ -199,6 +228,9 @@ namespace wood{
             auto channelIt = channels.find(channelId);
             channelIt->second.unmute();
         }
+
+        void enableTimestamps() { shouldTimestamp = true; }
+        void disableTimestamps() { shouldTimestamp = false; }
 
     };
 
