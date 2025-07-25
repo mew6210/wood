@@ -41,6 +41,32 @@ namespace wood{
             return oss.str();
         }
 
+        void printErrorSignature(std::ostream* strm) {
+            (*strm)<< "[" << termcolor::red << "-" << termcolor::reset << "] ";
+        }
+
+        void printWarningSignature(std::ostream* strm) {
+            (*strm)<< "[" << termcolor::yellow << "?" << termcolor::reset << "] ";
+        }
+        void printSuccessSignature(std::ostream* strm) {
+            (*strm)<< "[" << termcolor::green << "+" << termcolor::reset << "] ";
+        }
+        void printInfoSignature(std::ostream* strm) {
+            (*strm)<< "[" << "i" << "] ";
+        }
+
+
+        template<typename... Args>
+        std::string printArgs(std::ostream* strm,Args&&... args) {
+            std::ostringstream oss;
+            (oss << ... << args);
+            (*strm)<< oss.str();
+            return oss.str();
+        }
+
+
+
+
         template<typename... Args>
         std::string Log(LogLevel level, Args&&... args) {
 
@@ -110,6 +136,7 @@ namespace wood{
         std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now();
         
         bool shouldTimestamp = false;
+        std::ostream* stream = &std::cout;
 
 
         void printTimeTaken() {
@@ -123,17 +150,17 @@ namespace wood{
             
 
             
-            std::cout<<std::setfill('0') << std::setw(2) << hours << ":"
+            (*stream) << std::setfill('0') << std::setw(2) << hours << ":"
             << std::setfill('0') << std::setw(2) << minutes << ":"
             << std::setfill('0') << std::setw(2) << seconds;
 
         }
 
         void printTimestamp() {
-            std::cout << "[";
+            (*stream) << "[";
             std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now();
             printTimeTaken();
-            std::cout << "] ";
+            (*stream)<<"] ";
         }
 
         bool doesChannelExist(const int& channelId) {
@@ -158,16 +185,16 @@ namespace wood{
             if (!channel.isMuted()) {
 
                 switch (level) {
-                case woodInternal::LogLevel::Info: woodInternal::printInfoSignature();  break;
-                case woodInternal::LogLevel::Success: woodInternal::printSuccessSignature();  break;
-                case woodInternal::LogLevel::Warning: woodInternal::printWarningSignature();  break;
-                case woodInternal::LogLevel::Error: woodInternal::printErrorSignature();  break;
+                case woodInternal::LogLevel::Info: woodInternal::printInfoSignature(stream);  break;
+                case woodInternal::LogLevel::Success: woodInternal::printSuccessSignature(stream);  break;
+                case woodInternal::LogLevel::Warning: woodInternal::printWarningSignature(stream);  break;
+                case woodInternal::LogLevel::Error: woodInternal::printErrorSignature(stream);  break;
                 default: std::cout << "internal wrong LogLevel error";
                 }
                 if(shouldTimestamp) printTimestamp();
-                std::cout << channel.getName() << ": ";
-                std::string argsString = woodInternal::printArgs(std::forward<Args>(args)...);
-                std::cout << "\n";
+                (*stream) << channel.getName() << ": ";
+                std::string argsString = woodInternal::printArgs(stream,std::forward<Args>(args)...);
+                (*stream) << "\n";
                 return argsString;
             }
             return "mutedChannel";
@@ -231,6 +258,7 @@ namespace wood{
 
         void enableTimestamps() { shouldTimestamp = true; }
         void disableTimestamps() { shouldTimestamp = false; }
+        void changeStream(std::ostream& strm) { stream = &strm; }
 
     };
 

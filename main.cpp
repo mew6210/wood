@@ -1,4 +1,5 @@
 #include "wood.h"
+#include <fstream>
 
 struct Foo{};
 
@@ -29,10 +30,24 @@ void exLoggerLogs() {
 
 }
 
+void logToFile() {
+
+	ExLogger logger;
+	constexpr int ALL = 3;
+	logger.addChannel(3, Channel("All",false));
+	std::ofstream outputFile("testing.txt");
+	
+	logger.changeStream(outputFile);
+	logger.successLogChannel(ALL, "logging to", " file works", "!");
+
+
+}
+
 int main() {
 	
 	basicLogs();
 	exLoggerLogs();
+	logToFile();
 
 	
 	return 0;
