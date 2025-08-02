@@ -1,8 +1,6 @@
 #include "wood.h"
 #include <fstream>
 
-struct Foo{};
-
 using namespace wood;
 
 void basicLogs() {
