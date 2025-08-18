@@ -55,6 +55,8 @@ const char* text = "volume";
 logger.warningLogChannel(AUDIO, "watch out thats a very loud",text);
 ```
 
+See main.cpp for more examples
+
 
 
 

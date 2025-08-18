@@ -24,8 +24,6 @@ void exLoggerLogs() {
 	logger.warningLogChannel(GRAPHICS, "drivers not found");
 	Sleep(5000);
 	logger.successLogChannel(GRAPHICS, "actually found", ", nevermind");
-
-
 }
 
 void logToFile() {
@@ -37,16 +35,12 @@ void logToFile() {
 	
 	logger.changeStream(outputFile);
 	logger.successLogChannel(ALL, "logging to", " file works", "!");
-
-
 }
 
 int main() {
-	
 	basicLogs();
 	exLoggerLogs();
 	logToFile();
 
-	
 	return 0;
 }
