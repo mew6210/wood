@@ -18,10 +18,10 @@ constexpr int TESTING = 3;
 void exLoggerLogs() {
 	ExLogger logger;
 	logger.addChannel(GRAPHICS, Channel("Graphics", false));
-	logger.addChannel(INTERNAL, Channel("Graphics", false));
+	logger.addChannel(INTERNAL, Channel("Internal", false));
 
 	logger.successLogChannel(INTERNAL, "logger correctly initialized");
-	logger.enableTimestamps();
+	logger.setTimestamps(true);
 	logger.warningLogChannel(GRAPHICS, "drivers not found");
 	Sleep(5000);
 	logger.successLogChannel(GRAPHICS, "actually found", ", nevermind");
@@ -33,7 +33,7 @@ void logToFile() {
 	logger.addChannel(TESTING, Channel("Testing",false));
 	std::ofstream outputFile("testing.txt");
 	
-	logger.changeStream(outputFile);
+	logger.setStream(outputFile);
 	logger.successLogChannel(TESTING, "logging to", " file works", "!");
 }
 

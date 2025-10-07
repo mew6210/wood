@@ -106,13 +106,11 @@ namespace wood{
 
     public:
         Channel(const std::string& channelName, const bool& channelIsMute) : name(channelName), isMute(channelIsMute) {}
-        std::string getName() { return name; };
-        bool isMuted() { return isMute; };
+        std::string getName() const { return name; };
+        bool isMuted() const { return isMute; };
         void mute() { isMute = true; };
         void unmute() { isMute = false; };
         Channel() = default;
-
-
     };
 
     class ExLogger {
@@ -235,9 +233,8 @@ namespace wood{
             channelIt->second.unmute();
         }
 
-        void enableTimestamps() { shouldTimestamp = true; }
-        void disableTimestamps() { shouldTimestamp = false; }
-        void changeStream(std::ostream& strm) { stream = &strm; }
+        void setTimestamps(const bool& flag) { shouldTimestamp = flag; };
+        void setStream(std::ostream& strm) { stream = &strm; }
 
     };
 
