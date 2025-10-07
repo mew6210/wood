@@ -13,6 +13,7 @@ void basicLogs() {
 
 constexpr int GRAPHICS = 1;
 constexpr int INTERNAL = 2;
+constexpr int TESTING = 3;
 
 void exLoggerLogs() {
 	ExLogger logger;
@@ -29,12 +30,11 @@ void exLoggerLogs() {
 void logToFile() {
 
 	ExLogger logger;
-	constexpr int ALL = 3;
-	logger.addChannel(3, Channel("All",false));
+	logger.addChannel(TESTING, Channel("Testing",false));
 	std::ofstream outputFile("testing.txt");
 	
 	logger.changeStream(outputFile);
-	logger.successLogChannel(ALL, "logging to", " file works", "!");
+	logger.successLogChannel(TESTING, "logging to", " file works", "!");
 }
 
 int main() {

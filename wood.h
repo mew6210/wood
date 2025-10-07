@@ -42,30 +42,26 @@ namespace wood{
         }
 
         void printErrorSignature(std::ostream* strm) {
-            (*strm)<< "[" << termcolor::red << "-" << termcolor::reset << "] ";
+            *strm<< "[" << termcolor::red << "-" << termcolor::reset << "] ";
         }
 
         void printWarningSignature(std::ostream* strm) {
-            (*strm)<< "[" << termcolor::yellow << "?" << termcolor::reset << "] ";
+            *strm<< "[" << termcolor::yellow << "?" << termcolor::reset << "] ";
         }
         void printSuccessSignature(std::ostream* strm) {
-            (*strm)<< "[" << termcolor::green << "+" << termcolor::reset << "] ";
+            *strm<< "[" << termcolor::green << "+" << termcolor::reset << "] ";
         }
         void printInfoSignature(std::ostream* strm) {
-            (*strm)<< "[" << "i" << "] ";
+            *strm<< "[" << "i" << "] ";
         }
-
 
         template<typename... Args>
         std::string printArgs(std::ostream* strm,Args&&... args) {
             std::ostringstream oss;
             (oss << ... << args);
-            (*strm)<< oss.str();
+            *strm<< oss.str();
             return oss.str();
         }
-
-
-
 
         template<typename... Args>
         std::string Log(LogLevel level, Args&&... args) {
@@ -80,13 +76,9 @@ namespace wood{
 
             std::string argsString = printArgs(std::forward<Args>(args)...);
             std::cout << "\n";
-            return argsString;
-            
+            return argsString;            
         }
-
-    
     }
-
 
     template <typename... Args>
     void errorLog(const bool& shouldCrash, Args&&... args) {
@@ -96,20 +88,17 @@ namespace wood{
 
     template <typename... Args>
     void warningLog(Args&&... args) {
-        std::string errorString = woodInternal::Log(woodInternal::LogLevel::Warning, std::forward<Args>(args)...);
-
+        woodInternal::Log(woodInternal::LogLevel::Warning, std::forward<Args>(args)...);
     }
     template <typename... Args>
     void successLog(Args&&... args) {
-        std::string errorString = woodInternal::Log(woodInternal::LogLevel::Success, std::forward<Args>(args)...);
+        woodInternal::Log(woodInternal::LogLevel::Success, std::forward<Args>(args)...);
     }
 
     template <typename... Args>
     void infoLog(Args&&... args) {
-        std::string errorString = woodInternal::Log(woodInternal::LogLevel::Info, std::forward<Args>(args)...);
+        woodInternal::Log(woodInternal::LogLevel::Info, std::forward<Args>(args)...);
     }
-
-
 
     class Channel {
         std::string name = "";
@@ -126,8 +115,6 @@ namespace wood{
 
     };
 
-
-
     class ExLogger {
 
         std::unordered_map<int, Channel> channels;
@@ -138,7 +125,6 @@ namespace wood{
         bool shouldTimestamp = false;
         std::ostream* stream = &std::cout;
 
-
         void printTimeTaken() {
 
             end = std::chrono::high_resolution_clock::now();
@@ -148,19 +134,16 @@ namespace wood{
             int minutes = (seconds_taken % 3600) / 60;
             int seconds = seconds_taken % 60;
             
-
-            
-            (*stream) << std::setfill('0') << std::setw(2) << hours << ":"
+            *stream << std::setfill('0') << std::setw(2) << hours << ":"
             << std::setfill('0') << std::setw(2) << minutes << ":"
             << std::setfill('0') << std::setw(2) << seconds;
-
         }
 
         void printTimestamp() {
-            (*stream) << "[";
+            *stream << "[";
             std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now();
             printTimeTaken();
-            (*stream)<<"] ";
+            *stream<<"] ";
         }
 
         bool doesChannelExist(const int& channelId) {
@@ -177,7 +160,6 @@ namespace wood{
         std::string LogChannel(woodInternal::LogLevel level,const int& channelId, Args&&... args) {
 
             if (!doesChannelExist(channelId)) {
-                std::cout << "big error scary";
                 return "error";
             }
             auto channelIt = channels.find(channelId);
@@ -189,19 +171,16 @@ namespace wood{
                 case woodInternal::LogLevel::Success: woodInternal::printSuccessSignature(stream);  break;
                 case woodInternal::LogLevel::Warning: woodInternal::printWarningSignature(stream);  break;
                 case woodInternal::LogLevel::Error: woodInternal::printErrorSignature(stream);  break;
-                default: std::cout << "internal wrong LogLevel error";
+                default: throw(std::runtime_error("Wood internal: wrong woodInternal enum")); break;
                 }
                 if(shouldTimestamp) printTimestamp();
-                (*stream) << channel.getName() << ": ";
+                *stream << channel.getName() << ": ";
                 std::string argsString = woodInternal::printArgs(stream,std::forward<Args>(args)...);
-                (*stream) << "\n";
+                *stream << "\n";
                 return argsString;
             }
             return "mutedChannel";
-            
-
         }
-
 
     public:
         ExLogger() = default;
@@ -222,18 +201,18 @@ namespace wood{
         
         template <typename... Args>
         void warningLogChannel(const int& channelId,Args&&... args) {
-            std::string errorString = LogChannel(woodInternal::LogLevel::Warning,channelId, std::forward<Args>(args)...);
+            LogChannel(woodInternal::LogLevel::Warning,channelId, std::forward<Args>(args)...);
 
         }
         
         template <typename... Args>
         void successLogChannel(const int& channelId,Args&&... args) {
-            std::string errorString = LogChannel(woodInternal::LogLevel::Success,channelId, std::forward<Args>(args)...);
+            LogChannel(woodInternal::LogLevel::Success,channelId, std::forward<Args>(args)...);
         }
         
         template <typename... Args>
         void infoLogChannel(const int& channelId,Args&&... args) {
-            std::string errorString = LogChannel(woodInternal::LogLevel::Info,channelId, std::forward<Args>(args)...);
+            LogChannel(woodInternal::LogLevel::Info,channelId, std::forward<Args>(args)...);
         }
 
         void printChannelInfo(const int& channelId) {
